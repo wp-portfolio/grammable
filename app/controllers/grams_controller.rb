@@ -14,6 +14,14 @@ class GramsController < ApplicationController
     end
   end
 
+
+  def show
+    @gram = Gram.find_by_id(params[:id]) #find by id or return nil
+    if @gram.blank?
+      render plain: 'Not Found', status: :not_found
+    end
+  end
+
   def index
   end
 
