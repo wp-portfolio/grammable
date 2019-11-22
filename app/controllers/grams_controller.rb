@@ -28,6 +28,13 @@ class GramsController < ApplicationController
   def index
   end
 
+  def destroy
+    aGram
+    return render_not_found if aGram.blank?
+    aGram.destroy
+    redirect_to root_path
+  end
+
   def update
     aGram
     return render_not_found if aGram.blank?
