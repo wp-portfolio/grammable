@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe GramsController, type: :controller do
-#
+#grams edit
   describe "grams#edit action" do
     it "should successfully show the edit form if the gram is found" do
       gram = FactoryBot.create(:gram)
@@ -10,11 +10,11 @@ RSpec.describe GramsController, type: :controller do
     end
 
     it "should return a 404 error message if the gram is not found" do
-      get :edit, params: { id: 'TACOCAT' }
+      get :edit, params: { id: 'LOLE' }
       expect(response).to have_http_status(:not_found)
     end
   end
-#
+#grams show
   describe "grams#show action" do
     it "should successfully show the page if the gram is found" do
       gram = FactoryBot.create(:gram)
@@ -27,14 +27,14 @@ RSpec.describe GramsController, type: :controller do
       expect(response).to have_http_status(:not_found)
     end
   end
-
+#grams index
   describe "grams#index action" do
     it "should successfully show the page" do
       get :index
       expect(response).to have_http_status(:success)
     end
   end
-
+#grams new
   describe "grams#new action" do
     it "should require users to be logged in" do
       get :new
@@ -49,7 +49,7 @@ RSpec.describe GramsController, type: :controller do
       expect(response).to have_http_status(:success)
     end
   end
-
+#grams create
   describe "grams#create action" do
 
     it "should require users to be logged in" do
@@ -78,6 +78,29 @@ RSpec.describe GramsController, type: :controller do
       post :create, params: { gram: { message: '' } }
       expect(response).to have_http_status(:unprocessable_entity)
       expect(gram_count).to eq Gram.count
+    end
+  end
+#grams update
+  describe "grams#update action" do
+    it "should allow users to successfully update grams" do
+      gram = FactoryBot.create(:gram, message: "Initial Value")
+      patch :update, params: {id: gram.id, gram: { message: 'Changed'}}
+      expect(response).to redirect_to root_path
+      gram.reload
+      expect(gram.message).to eq "Changed"
+    end
+
+    it "should have http 404 error if the gram cannot be found" do
+      patch :update, params: { id: "KEKW", gram: { message: 'Changed' } }
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "should render the edit form with an http status of unprocessable_entity" do
+      gram = FactoryBot.create(:gram, message: "Initial Value")
+      patch :update, params: { id: gram.id, gram: { message: '' } }
+      expect(response).to have_http_status(:unprocessable_entity)
+      gram.reload
+      expect(gram.message).to eq "Initial Value"
     end
   end
 end
